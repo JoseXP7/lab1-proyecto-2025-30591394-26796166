@@ -13,8 +13,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+model PersonasAtendidas {
+  id                 Int      @id @default(autoincrement())
+  tipoDocumento      String
+  numeroDocumento    String   @unique
+  nombres            String
+  apellidos          String
+  fechaNacimiento    DateTime @map("fecha_nacimiento")
+  sexo               String
+  correo             String   @unique
+  telefono           String
+  direccion          String
+  contactoEmergencia String   @map("contacto_emergencia")
+  alergias           String?
+  estado             Boolean  @default(true)
+
+  @@map("personas_atendidas")
 }
