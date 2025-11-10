@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "predev": "prisma generate",
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "test": "vitest",
+    "postinstall": "prisma generate"
   },
   "repository": {
     "type": "git",
@@ -13,7 +17,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/JoseXP7/lab1-proyecto-2025-30591394-26796166/issues"
   },
@@ -25,11 +29,12 @@
     "express": "^5.1.0",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
-    "morgan": "^1.10.1",
-    "nodemon": "^3.1.10"
+    "morgan": "^1.10.1"
   },
   "devDependencies": {
     "dotenv": "^17.2.3",
-    "prisma": "^6.19.0"
+    "nodemon": "^3.1.10",
+    "prisma": "^6.19.0",
+    "vitest": "^4.0.8"
   }
 }
