@@ -3,7 +3,8 @@ import config from './config/config.js'
 import morgan from 'morgan'
 import cors from 'cors'
 import helmet from 'helmet'
-import prisma from './config/prisma.js'
+import personasRoutes from './routes/personasRoutes.js'
+import errors from './utils/errors.js'
 
 const app = express()
 
@@ -17,13 +18,9 @@ app.use(express.json())
 // Configuration
 app.set('port', config.app.port)
 
-app.get('/', async (req, res) => {
-  try {
-    const users = await prisma.user.findMany()
-    res.json(users)
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-})
+//Routes
+
+app.use('/api/personas', personasRoutes)
+app.use(errors)
 
 export default app

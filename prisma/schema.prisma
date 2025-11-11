@@ -19,7 +19,7 @@ model PersonasAtendidas {
   numeroDocumento    String   @unique
   nombres            String
   apellidos          String
-  fechaNacimiento    DateTime @map("fecha_nacimiento")
+  fechaNacimiento    DateTime @db.Date @map("fecha_nacimiento")
   sexo               String
   correo             String   @unique
   telefono           String

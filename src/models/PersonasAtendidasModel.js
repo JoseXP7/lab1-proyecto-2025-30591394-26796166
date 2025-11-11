@@ -5,7 +5,10 @@ export const createPersonasAtendidas = z.object({
   numeroDocumento: z.string().min(1).max(8),
   nombres: z.string().min(1).max(100),
   apellidos: z.string().min(1).max(100),
-  fechaNacimiento: z.iso.date(), //YYYY-MM-DD
+  fechaNacimiento: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .transform((str) => new Date(str)), //YYYY-MM-DD
   sexo: z.enum(['M', 'F']),
   correo: z.email(),
   telefono: z.string().min(11).max(15),
