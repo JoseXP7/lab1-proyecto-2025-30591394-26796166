@@ -18,6 +18,9 @@
   "author": "",
   "license": "ISC",
   "type": "module",
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "bugs": {
     "url": "https://github.com/JoseXP7/lab1-proyecto-2025-30591394-26796166/issues"
   },
