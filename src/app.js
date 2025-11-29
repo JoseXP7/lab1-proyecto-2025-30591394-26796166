@@ -6,6 +6,15 @@ import helmet from 'helmet'
 import swaggerUi from 'swagger-ui-express'
 import swaggerSpec from './config/swaggerOptions.js'
 import personasRoutes from './routes/personasRoutes.js'
+import profesionalesRoutes from './routes/profesionalesRoutes.js'
+import unidadesRoutes from './routes/unidadesAtencionRoutes.js'
+import citasRoutes from './routes/citasRoutes.js'
+import episodiosRoutes from './routes/episodiosRoutes.js'
+import ordenesRoutes from './routes/ordenesRoutes.js'
+import prescripcionesRoutes from './routes/prescripcionesRoutes.js'
+import resultadosRoutes from './routes/resultadosRoutes.js'
+import agendaRoutes from './routes/agendaRoutes.js'
+import consentimientosRoutes from './routes/consentimientosRoutes.js'
 import errors from './utils/errors.js'
 
 const app = express()
@@ -22,17 +31,26 @@ app.set('port', config.app.port)
 
 // Root endpoint: mensaje de estado y enlace a la documentación
 app.get('/', (req, res) => {
-	const host = req.get('host')
-	const protocol = req.protocol
-	res.json({
-		message: 'API corriendo',
-		documentation: `${protocol}://${host}/api-docs`
-	})
+  const host = req.get('host')
+  const protocol = req.protocol
+  res.json({
+    message: 'API corriendo',
+    documentation: `${protocol}://${host}/api-docs`,
+  })
 })
 
 //Routes
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 app.use('/personas', personasRoutes)
+app.use('/profesionales', profesionalesRoutes)
+app.use('/unidades', unidadesRoutes)
+app.use('/citas', citasRoutes)
+app.use('/episodios', episodiosRoutes)
+app.use('/ordenes', ordenesRoutes)
+app.use('/prescripciones', prescripcionesRoutes)
+app.use('/resultados', resultadosRoutes)
+app.use('/agenda', agendaRoutes)
+app.use('/consentimientos', consentimientosRoutes)
 app.use(errors)
 
 export default app

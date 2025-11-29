@@ -170,7 +170,7 @@ model Consentimientos {
 }
 
 // ---------------------------------------------
-// 2.4 Órdenes y prestaciones
+// 2.4 Órdenes y preescripciones
 // ---------------------------------------------
 
 model Ordenes {

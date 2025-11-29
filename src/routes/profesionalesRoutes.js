@@ -1,5 +1,5 @@
-import express from "express"
-import ProfesionalesController from "../controllers/ProfesionalesController.js"
+import express from 'express'
+import ProfesionalesController from '../controllers/ProfesionalesController.js'
 
 const router = express.Router()
 
@@ -31,7 +31,7 @@ const router = express.Router()
  *       '409':
  *         description: Conflicto (documento duplicado)
  */
-router.post("/", ProfesionalesController.createProfesional)
+router.post('/', ProfesionalesController.createProfesional)
 
 /**
  * @openapi
@@ -50,7 +50,7 @@ router.post("/", ProfesionalesController.createProfesional)
  *               items:
  *                 $ref: '#/components/schemas/Profesional'
  */
-router.get("/", ProfesionalesController.getAllProfesionales)
+router.get('/', ProfesionalesController.getAllProfesionales)
 
 /**
  * @openapi
@@ -75,7 +75,7 @@ router.get("/", ProfesionalesController.getAllProfesionales)
  *       '404':
  *         description: No encontrado
  */
-router.get("/:id", ProfesionalesController.getProfesionalById)
+router.get('/:id', ProfesionalesController.getProfesionalById)
 
 /**
  * @openapi
@@ -104,7 +104,7 @@ router.get("/:id", ProfesionalesController.getProfesionalById)
  *       '404':
  *         description: No encontrado
  */
-router.patch("/:id", ProfesionalesController.patchProfesional)
+router.patch('/:id', ProfesionalesController.updateProfesional)
 
 /**
  * @openapi
@@ -125,6 +125,6 @@ router.patch("/:id", ProfesionalesController.patchProfesional)
  *       '404':
  *         description: No encontrado
  */
-router.delete("/:id", ProfesionalesController.deleteProfesional)
+router.delete('/:id', ProfesionalesController.deleteProfesional)
 
 export default router

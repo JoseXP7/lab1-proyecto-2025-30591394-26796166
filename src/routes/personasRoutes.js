@@ -1,5 +1,6 @@
 import express from 'express'
 import PersonasAtentidasController from '../controllers/PersonasAtentidasController.js'
+import EpisodiosController from '../controllers/EpisodiosController.js'
 
 const router = express.Router()
 
@@ -55,6 +56,24 @@ router.get('/', PersonasAtentidasController.getAllPersonasAtendidas)
  *               $ref: '#/components/schemas/ErrorResponse'
  */
 router.get('/:id', PersonasAtentidasController.getPersonaAtendidaById)
+
+/**
+ * @openapi
+ * /personas/{id}/episodios:
+ *   get:
+ *     tags: [Personas]
+ *     summary: Listar todos los episodios de una persona
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Lista de episodios
+ */
+router.get('/:id/episodios', EpisodiosController.getEpisodiosByPersona)
 
 /**
  * @openapi
