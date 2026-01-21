@@ -401,6 +401,25 @@ const options = {
             estado: { type: 'string' },
           },
         },
+        OrdenItem: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer', example: 1 },
+            ordenId: { type: 'integer' },
+            codigo: { type: 'string' },
+            descripcion: { type: 'string' },
+            indicaciones: { type: 'string' },
+          },
+        },
+        OrdenItemCreate: {
+          type: 'object',
+          required: ['codigo', 'descripcion'],
+          properties: {
+            codigo: { type: 'string' },
+            descripcion: { type: 'string' },
+            indicaciones: { type: 'string' },
+          },
+        },
         PlanCreate: {
           type: 'object',
           required: ['aseguradoraId', 'nombre', 'condicionesGenerales'],
