@@ -1,17 +1,23 @@
-import PlanesCoberturaRepository from "../repositories/PlanesCoberturaRepository.js"
-import AseguradorasRepository from "../repositories/AseguradorasRepository.js"
+import PlanesCoberturaRepository from '../repositories/PlanesCoberturaRepository.js'
+import AseguradorasRepository from '../repositories/AseguradorasRepository.js'
 
 class PlanesCoberturaService {
   async create(data) {
     const aseguradora = await AseguradorasRepository.findById(
       data.aseguradoraId,
     )
-    if (!aseguradora) throw new Error("Aseguradora no encontrada")
+    if (!aseguradora) throw new Error('Aseguradora no encontrada')
     return PlanesCoberturaRepository.create(data)
   }
 
   async list(filters) {
     return PlanesCoberturaRepository.findAll(filters)
+  }
+
+  async getById(id) {
+    const plan = await PlanesCoberturaRepository.findById(id)
+    if (!plan) throw new Error('Plan no encontrada')
+    return plan
   }
 
   async update(id, data) {
@@ -20,7 +26,7 @@ class PlanesCoberturaService {
   }
 
   async deactivate(id) {
-    return PlanesCoberturaRepository.update(id, { estado: "INACTIVO" })
+    return PlanesCoberturaRepository.update(id, { estado: 'INACTIVO' })
   }
 }
 

@@ -361,6 +361,109 @@ const options = {
           },
         },
 
+        /* Aseguradoras, Planes y Afiliaciones (Sección 2.5) */
+        Aseguradora: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer', example: 1 },
+            nombre: { type: 'string' },
+            nit: { type: 'string' },
+            contacto: { type: 'string' },
+            estado: { type: 'string', example: 'ACTIVA' },
+          },
+        },
+        AseguradoraCreate: {
+          type: 'object',
+          required: ['nombre', 'nit', 'contacto'],
+          properties: {
+            nombre: { type: 'string' },
+            nit: { type: 'string' },
+            contacto: { type: 'string' },
+          },
+        },
+        AseguradoraUpdate: {
+          type: 'object',
+          properties: {
+            nombre: { type: 'string' },
+            nit: { type: 'string' },
+            contacto: { type: 'string' },
+            estado: { type: 'string' },
+          },
+        },
+
+        Plan: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer', example: 1 },
+            aseguradoraId: { type: 'integer' },
+            nombre: { type: 'string' },
+            condicionesGenerales: { type: 'string' },
+            estado: { type: 'string' },
+          },
+        },
+        PlanCreate: {
+          type: 'object',
+          required: ['aseguradoraId', 'nombre', 'condicionesGenerales'],
+          properties: {
+            aseguradoraId: { type: 'integer' },
+            nombre: { type: 'string' },
+            condicionesGenerales: { type: 'string' },
+          },
+        },
+        PlanUpdate: {
+          type: 'object',
+          properties: {
+            nombre: { type: 'string' },
+            condicionesGenerales: { type: 'string' },
+            estado: { type: 'string' },
+          },
+        },
+
+        Afiliacion: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer', example: 1 },
+            personaId: { type: 'integer' },
+            planId: { type: 'integer' },
+            numeroPoliza: { type: 'string' },
+            vigenteDesde: { type: 'string', format: 'date' },
+            vigenteHasta: { type: 'string', format: 'date' },
+            copago: { type: 'number' },
+            cuotaModeradora: { type: 'number' },
+            persona: { $ref: '#/components/schemas/Persona' },
+            plan: { $ref: '#/components/schemas/Plan' },
+          },
+        },
+        AfiliacionCreate: {
+          type: 'object',
+          required: [
+            'personaId',
+            'planId',
+            'numeroPoliza',
+            'vigenteDesde',
+            'vigenteHasta',
+          ],
+          properties: {
+            personaId: { type: 'integer' },
+            planId: { type: 'integer' },
+            numeroPoliza: { type: 'string' },
+            vigenteDesde: { type: 'string', format: 'date' },
+            vigenteHasta: { type: 'string', format: 'date' },
+            copago: { type: 'number' },
+            cuotaModeradora: { type: 'number' },
+          },
+        },
+        AfiliacionUpdate: {
+          type: 'object',
+          properties: {
+            numeroPoliza: { type: 'string' },
+            vigenteDesde: { type: 'string', format: 'date' },
+            vigenteHasta: { type: 'string', format: 'date' },
+            copago: { type: 'number' },
+            cuotaModeradora: { type: 'number' },
+          },
+        },
+
         /* (Removed schemas for Usuarios; out of project scope) */
 
         ErrorResponse: {
