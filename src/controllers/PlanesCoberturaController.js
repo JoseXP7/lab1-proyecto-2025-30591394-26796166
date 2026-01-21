@@ -11,6 +11,12 @@ class PlanesCoberturaController {
       success(req, res, nuevo, 201)
     } catch (err) {
       if (err instanceof ZodError) return error(req, res, { errors: err }, 400)
+      if (
+        typeof err.message === 'string' &&
+        err.message.includes('no encontrada')
+      ) {
+        return error(req, res, err.message, 404)
+      }
       error(req, res, err.message, 500)
     }
   }
