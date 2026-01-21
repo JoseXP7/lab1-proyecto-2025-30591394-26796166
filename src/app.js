@@ -15,6 +15,9 @@ import prescripcionesRoutes from './routes/prescripcionesRoutes.js'
 import resultadosRoutes from './routes/resultadosRoutes.js'
 import agendaRoutes from './routes/agendaRoutes.js'
 import consentimientosRoutes from './routes/consentimientosRoutes.js'
+import AseguradorasRoutes from './routes/AseguradorasRoutes.js'
+import planesRoutes from './routes/planesRoutes.js'
+import afiliacionesRoutes from './routes/afiliacionesRoutes.js'
 import errors from './utils/errors.js'
 
 const app = express()
@@ -51,6 +54,9 @@ app.use('/prescripciones', prescripcionesRoutes)
 app.use('/resultados', resultadosRoutes)
 app.use('/agenda', agendaRoutes)
 app.use('/consentimientos', consentimientosRoutes)
+app.use('/aseguradoras', AseguradorasRoutes)
+app.use('/planes', planesRoutes)
+app.use('/afiliaciones', afiliacionesRoutes)
 app.use(errors)
 
 export default app

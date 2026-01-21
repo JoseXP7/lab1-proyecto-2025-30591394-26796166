@@ -35,6 +35,7 @@ model PersonasAtendidas {
   citas               Citas[]
   episodios          EpisodiosAtencion[]
   consentimientos    Consentimientos[]
+  afiliaciones       Afiliaciones[]
 
   @@map("personas_atendidas")
 }
@@ -185,6 +186,7 @@ model Ordenes {
   episodio        EpisodiosAtencion @relation(fields: [episodioId], references: [id])
   items           OrdenItems[]       // Detalle de los ítems o exámenes solicitados
   resultados      Resultados[]       // El resultado asociado a esta orden
+  autorizaciones Autorizaciones[]  // Autorizaciones asociadas a esta orden
 }
 
 model OrdenItems {
@@ -240,4 +242,67 @@ model Resultados {
   orden           Ordenes @relation(fields: [ordenId], references: [id])
   
   @@unique([ordenId, version])
+}
+
+// ---------------------------------------------
+// 2.5 Cobertura, autorizaciones y planes
+// ---------------------------------------------
+
+model Aseguradoras {
+  id        Int     @id @default(autoincrement())
+  nombre    String
+  nit       String  @unique
+  contacto  String
+  estado    String  @default("ACTIVA")
+
+  planes    PlanesCobertura[]
+
+  @@map("aseguradoras")
+}
+
+model PlanesCobertura {
+  id                 Int     @id @default(autoincrement())
+  aseguradoraId      Int     @map("aseguradora_id")
+  nombre             String
+  condicionesGenerales String @db.Text @map("condiciones_generales")
+  estado             String  @default("ACTIVO")
+
+  aseguradora        Aseguradoras @relation(fields: [aseguradoraId], references: [id])
+  afiliaciones       Afiliaciones[]
+  autorizaciones     Autorizaciones[]
+
+  @@map("planes_cobertura")
+}
+
+model Afiliaciones {
+  id               Int      @id @default(autoincrement())
+  personaId        Int      @map("persona_id")
+  planId           Int      @map("plan_id")
+  numeroPoliza     String   @map("numero_poliza")
+  vigenteDesde     DateTime @db.Date @map("vigente_desde")
+  vigenteHasta     DateTime @db.Date @map("vigente_hasta")
+  copago           Float    @default(0)
+  cuotaModeradora  Float    @default(0)
+
+  persona          PersonasAtendidas @relation(fields: [personaId], references: [id])
+  plan             PlanesCobertura   @relation(fields: [planId], references: [id])
+
+  @@map("afiliaciones")
+}
+
+model Autorizaciones {
+  id                  Int      @id @default(autoincrement())
+  ordenId             Int?     @map("orden_id")
+  procedimientoCodigo String?  @map("procedimiento_codigo")
+  planId              Int      @map("plan_id")
+  estado              String   @default("SOLICITADA")
+  fechaSolicitud      DateTime @default(now()) @map("fecha_solicitud")
+  fechaRespuesta      DateTime? @map("fecha_respuesta")
+  numeroAutorizacion  String?  @map("numero_autorizacion")
+  observaciones       String?  @db.Text
+
+  orden               Ordenes?        @relation(fields: [ordenId], references: [id])
+  plan                PlanesCobertura @relation(fields: [planId], references: [id])
+
+  @@map("autorizaciones")
 }
