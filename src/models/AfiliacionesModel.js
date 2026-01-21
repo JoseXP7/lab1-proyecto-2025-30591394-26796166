@@ -1,25 +1,37 @@
-import { z } from "zod"
+import { z } from 'zod'
 
 export const createAfiliacion = z.object({
-  personaId: z.number().int("personaId debe ser un entero"),
-  planId: z.number().int("planId debe ser un entero"),
+  personaId: z.number(),
+  planId: z.number(),
   numeroPoliza: z.string().min(1),
-  vigenteDesde: z.coerce
-    .date()
-    .refine((d) => !Number.isNaN(d.getTime()), {
-      message: "vigenteDesde inválido",
-    }),
-  vigenteHasta: z.coerce
-    .date()
-    .refine((d) => !Number.isNaN(d.getTime()), {
-      message: "vigenteHasta inválido",
-    }),
-  copago: z.number().min(0).optional(),
-  cuotaModeradora: z.number().min(0).optional(),
+  vigenteDesde: z.preprocess(
+    (val) => {
+      if (typeof val === 'string') return new Date(val)
+      return val
+    },
+    z
+      .date()
+      .refine((d) => !Number.isNaN(d.getTime()), {
+        message: 'vigenteDesde debe ser una fecha válida (ISO-8601)',
+      }),
+  ),
+  vigenteHasta: z.preprocess(
+    (val) => {
+      if (typeof val === 'string') return new Date(val)
+      return val
+    },
+    z
+      .date()
+      .refine((d) => !Number.isNaN(d.getTime()), {
+        message: 'vigenteHasta debe ser una fecha válida (ISO-8601)',
+      }),
+  ),
+  copago: z.number().optional(),
+  cuotaModeradora: z.number().optional(),
 })
 
 export const updateAfiliacion = createAfiliacion
   .partial()
-  .refine((data) => Object.keys(data).length > 0, {
-    message: "Debe enviar al menos un campo para actualizar",
+  .refine((d) => Object.keys(d).length > 0, {
+    message: 'Debe enviar al menos un campo',
   })

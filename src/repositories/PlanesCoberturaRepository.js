@@ -1,4 +1,4 @@
-import prisma from "../config/prisma.js"
+import prisma from '../config/prisma.js'
 
 class PlanesCoberturaRepository {
   async create(data) {
@@ -13,6 +13,12 @@ class PlanesCoberturaRepository {
     return prisma.planesCobertura.findUnique({
       where: { id: parseInt(id) },
     })
+  }
+
+  async findByIdOrFail(id) {
+    const found = await this.findById(id)
+    if (!found) throw new Error('Plan no encontrada')
+    return found
   }
 
   async update(id, data) {
