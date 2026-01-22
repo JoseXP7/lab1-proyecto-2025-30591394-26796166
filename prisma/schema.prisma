@@ -270,6 +270,7 @@ model PlanesCobertura {
   aseguradora        Aseguradoras @relation(fields: [aseguradoraId], references: [id])
   afiliaciones       Afiliaciones[]
   autorizaciones     Autorizaciones[]
+  aranceles         Arancel[]
 
   @@map("planes_cobertura")
 }
@@ -305,4 +306,37 @@ model Autorizaciones {
   plan                PlanesCobertura @relation(fields: [planId], references: [id])
 
   @@map("autorizaciones")
+}
+
+// ---------------------------------------------
+// 2.6 Catalogo clinico y arancel
+// ---------------------------------------------
+
+model Prestaciones {
+  codigo          String   @id
+  nombre          String
+  grupo           String
+  requisitos      String?  @db.Text
+  tiempoEstimado  Int      @map("tiempo_estimado") // en minutos
+
+  // Relaciones
+  aranceles       Arancel[]
+
+  @@map("prestaciones")
+}
+
+model Arancel {
+  id                Int      @id @default(autoincrement())
+  prestacionCodigo  String   @map("prestacion_codigo")
+  planId            Int?     @map("plan_id")
+  valorBase         Decimal  @db.Decimal(10, 2) @map("valor_base")
+  impuestos         Decimal  @db.Decimal(10, 2)
+  vigenteDesde      DateTime @db.Date @map("vigente_desde")
+  vigenteHasta      DateTime @db.Date @map("vigente_hasta")
+
+  // Relaciones
+  prestacion        Prestaciones   @relation(fields: [prestacionCodigo], references: [codigo])
+  plan              PlanesCobertura? @relation(fields: [planId], references: [id])
+
+  @@map("arancel")
 }
