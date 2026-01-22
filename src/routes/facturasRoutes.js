@@ -26,7 +26,7 @@ const router = express.Router()
  *       201:
  *         description: Factura creada
  */
-router.post('/', facturasController.create.bind(facturasController))
+router.post('/', facturasController.create)
 
 /**
  * @openapi
@@ -48,7 +48,7 @@ router.post('/', facturasController.create.bind(facturasController))
  *             schema:
  *               $ref: '#/components/schemas/Factura'
  */
-router.get('/:id', facturasController.get.bind(facturasController))
+router.get('/:id', facturasController.get)
 
 /**
  * @openapi
@@ -72,9 +72,6 @@ router.get('/:id', facturasController.get.bind(facturasController))
  *       201:
  *         description: Pago registrado
  */
-router.post(
-  '/:id/pagos',
-  facturasController.createPago.bind(facturasController),
-)
+router.post('/:id/pagos', facturasController.createPago)
 
 export default router
