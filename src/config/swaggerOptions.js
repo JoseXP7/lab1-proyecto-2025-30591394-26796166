@@ -420,6 +420,59 @@ const options = {
             indicaciones: { type: 'string' },
           },
         },
+        /* Sección 2.6: Prestaciones y Arancel */
+        Prestacion: {
+          type: 'object',
+          properties: {
+            codigo: { type: 'string' },
+            nombre: { type: 'string' },
+            grupo: { type: 'string' },
+            requisitos: { type: 'string' },
+            tiempoEstimado: { type: 'integer', example: 30 },
+          },
+        },
+        PrestacionCreate: {
+          type: 'object',
+          required: ['codigo', 'nombre', 'grupo'],
+          properties: {
+            codigo: { type: 'string' },
+            nombre: { type: 'string' },
+            grupo: { type: 'string' },
+            requisitos: { type: 'string' },
+            tiempoEstimado: { type: 'integer' },
+          },
+        },
+        Arancel: {
+          type: 'object',
+          properties: {
+            prestacionCodigo: { type: 'string' },
+            planId: { type: 'integer' },
+            valorBase: { type: 'number' },
+            impuestos: { type: 'number' },
+            vigenteDesde: { type: 'string', format: 'date-time' },
+            vigenteHasta: { type: 'string', format: 'date-time' },
+            /* Note: response may include related `prestacion` and `plan` when server expands relations,
+               but by default the model accepts and returns only the scalar fields below. */
+          },
+        },
+        ArancelCreate: {
+          type: 'object',
+          required: [
+            'prestacionCodigo',
+            'valorBase',
+            'impuestos',
+            'vigenteDesde',
+            'vigenteHasta',
+          ],
+          properties: {
+            prestacionCodigo: { type: 'string' },
+            planId: { type: 'integer' },
+            valorBase: { type: 'number' },
+            impuestos: { type: 'number' },
+            vigenteDesde: { type: 'string', format: 'date-time' },
+            vigenteHasta: { type: 'string', format: 'date-time' },
+          },
+        },
         PlanCreate: {
           type: 'object',
           required: ['aseguradoraId', 'nombre', 'condicionesGenerales'],
