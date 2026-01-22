@@ -340,3 +340,69 @@ model Arancel {
 
   @@map("arancel")
 }
+
+// ---------------------------------------------
+// 2.7 Facturacion y cobros
+// ---------------------------------------------
+
+model Facturas {
+  id           Int      @id @default(autoincrement())
+  numero       String   @unique
+  fechaEmision DateTime @map("fecha_emision")
+  personaId    Int?     @map("persona_id")
+  aseguradoraId Int?    @map("aseguradora_id")
+  moneda       String
+  subtotal     Decimal  @db.Decimal(10, 2)
+  total        Decimal  @db.Decimal(10, 2)
+  estado       String   @default("PENDIENTE") // emitida, pagada, pendiente, anulada
+
+  items        FacturaItems[]
+  pagos        Pagos[]
+
+  persona      PersonasAtendidas? @relation(fields: [personaId], references: [id])
+  aseguradora  Aseguradoras?      @relation(fields: [aseguradoraId], references: [id])
+
+  @@map("facturas")
+}
+
+model FacturaItems {
+  id               Int      @id @default(autoincrement())
+  facturaId        Int      @map("factura_id")
+  prestacionCodigo String   @map("prestacion_codigo")
+  descripcion      String   @db.Text
+  cantidad         Int
+  valorUnitario    Decimal  @db.Decimal(10, 2) @map("valor_unitario")
+  impuestos        Decimal  @db.Decimal(10, 2)
+  total            Decimal  @db.Decimal(10, 2)
+
+  factura          Facturas @relation(fields: [facturaId], references: [id])
+  prestacion       Prestaciones @relation(fields: [prestacionCodigo], references: [codigo])
+
+  @@map("factura_items")
+}
+
+model Pagos {
+  id         Int      @id @default(autoincrement())
+  facturaId  Int      @map("factura_id")
+  fecha      DateTime @default(now())
+  monto      Decimal  @db.Decimal(10, 2)
+  medio      String
+  referencia String?
+  estado     String   @default("COMPLETADO")
+
+  factura    Facturas @relation(fields: [facturaId], references: [id])
+
+  @@map("pagos")
+}
+
+model NotasFactura {
+  id         Int      @id @default(autoincrement())
+  facturaId  Int      @map("factura_id")
+  monto      Decimal  @db.Decimal(10, 2)
+  motivo     String   @db.Text
+  tipo       String   // CREDITO o DEBITO
+
+  factura    Facturas @relation(fields: [facturaId], references: [id])
+
+  @@map("notas_factura")
+}

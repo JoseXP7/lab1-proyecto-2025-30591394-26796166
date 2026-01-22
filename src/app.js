@@ -20,6 +20,7 @@ import planesRoutes from './routes/planesRoutes.js'
 import afiliacionesRoutes from './routes/afiliacionesRoutes.js'
 import prestacionesRoutes from './routes/prestacionesRoutes.js'
 import arancelRoutes from './routes/arancelRoutes.js'
+import facturasRoutes from './routes/facturasRoutes.js'
 import errors from './utils/errors.js'
 
 const app = express()
@@ -61,6 +62,7 @@ app.use('/planes', planesRoutes)
 app.use('/afiliaciones', afiliacionesRoutes)
 app.use('/prestaciones', prestacionesRoutes)
 app.use('/arancel', arancelRoutes)
+app.use('/facturas', facturasRoutes)
 app.use(errors)
 
 export default app
