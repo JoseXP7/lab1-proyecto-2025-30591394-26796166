@@ -23,7 +23,7 @@ model PersonasAtendidas {
   numeroDocumento    String   @unique
   nombres            String
   apellidos          String
-  fechaNacimiento    DateTime @db.Date @map("fecha_nacimiento")
+  fechaNacimiento    DateTime @map("fecha_nacimiento") @db.Date
   sexo               String
   correo             String   @unique
   telefono           String
@@ -32,43 +32,44 @@ model PersonasAtendidas {
   alergias           String?
   estado             Boolean  @default(true)
 
-  citas               Citas[]
-  episodios          EpisodiosAtencion[]
-  consentimientos    Consentimientos[]
-  afiliaciones       Afiliaciones[]
+  citas           Citas[]
+  episodios       EpisodiosAtencion[]
+  consentimientos Consentimientos[]
+  afiliaciones    Afiliaciones[]
+  facturas        Facturas[]
 
   @@map("personas_atendidas")
 }
 
 model Profesionales {
-  id                    Int      @id @default(autoincrement())
-  nombres               String
-  apellidos             String
-  registroProfesional   String   @unique @map("registro_profesional")
-  especialidad          String
-  correo                String   @unique
-  telefono              String
-  agendaHabilitada      Boolean  @default(true) @map("agenda_habilitada")
-  estado                String   @default("ACTIVO")
+  id                  Int     @id @default(autoincrement())
+  nombres             String
+  apellidos           String
+  registroProfesional String  @unique @map("registro_profesional")
+  especialidad        String
+  correo              String  @unique
+  telefono            String
+  agendaHabilitada    Boolean @default(true) @map("agenda_habilitada")
+  estado              String  @default("ACTIVO")
 
-  citas               Citas[]
-  agenda             Agenda[]
-  notasClinicas      NotasClinicas[]
+  citas         Citas[]
+  agenda        Agenda[]
+  notasClinicas NotasClinicas[]
 
   @@map("profesionales")
 }
 
 model UnidadesAtencion {
-  id              Int      @id @default(autoincrement())
-  nombre          String   @map("nombre")
-  tipo            String   @map("tipo")
-  direccion       String   @map("direccion")
-  telefono        String   @map("telefono")
-  horarioReferencia String   @map("horario_referencia")
-  estado          String   @default("ACTIVO")
+  id                Int    @id @default(autoincrement())
+  nombre            String @map("nombre")
+  tipo              String @map("tipo")
+  direccion         String @map("direccion")
+  telefono          String @map("telefono")
+  horarioReferencia String @map("horario_referencia")
+  estado            String @default("ACTIVO")
 
-  citas           Citas[]
-  agenda         Agenda[]
+  citas  Citas[]
+  agenda Agenda[]
 
   @@map("unidades_atencion")
 }
@@ -78,36 +79,36 @@ model UnidadesAtencion {
 // ---------------------------------------------
 
 model Agenda {
-  id              Int      @id @default(autoincrement())
-  profesionalId   Int      @map("profesional_id")
-  unidadId        Int      @map("unidad_id")
-  inicio          DateTime
-  fin             DateTime
-  capacidad       Int      @default(1)
-  estado          String   @default("ABIERTO")
+  id            Int      @id @default(autoincrement())
+  profesionalId Int      @map("profesional_id")
+  unidadId      Int      @map("unidad_id")
+  inicio        DateTime
+  fin           DateTime
+  capacidad     Int      @default(1)
+  estado        String   @default("ABIERTO")
 
-  profesional     Profesionales @relation(fields: [profesionalId], references: [id])
-  unidad          UnidadesAtencion @relation(fields: [unidadId], references: [id])
-  citas           Citas[]
+  profesional Profesionales    @relation(fields: [profesionalId], references: [id])
+  unidad      UnidadesAtencion @relation(fields: [unidadId], references: [id])
+  citas       Citas[]
 }
 
 model Citas {
-  id              Int      @id @default(autoincrement())
-  personaId       Int
-  profesionalId   Int
-  unidadId        Int
-  inicio          DateTime
-  fin             DateTime
-  motivo          String
-  canal           String   @default("PRESENCIAL")
-  estado          String   @default("PROGRAMADA")
-  observaciones   String?
-  agendaId        Int?
+  id            Int      @id @default(autoincrement())
+  personaId     Int
+  profesionalId Int
+  unidadId      Int
+  inicio        DateTime
+  fin           DateTime
+  motivo        String
+  canal         String   @default("PRESENCIAL")
+  estado        String   @default("PROGRAMADA")
+  observaciones String?
+  agendaId      Int?
 
-  persona         PersonasAtendidas @relation(fields: [personaId], references: [id])
-  profesional     Profesionales @relation(fields: [profesionalId], references: [id])
-  unidad          UnidadesAtencion @relation(fields: [unidadId], references: [id])
-  agenda          Agenda? @relation(fields: [agendaId], references: [id])
+  persona     PersonasAtendidas @relation(fields: [personaId], references: [id])
+  profesional Profesionales     @relation(fields: [profesionalId], references: [id])
+  unidad      UnidadesAtencion  @relation(fields: [unidadId], references: [id])
+  agenda      Agenda?           @relation(fields: [agendaId], references: [id])
 }
 
 // ---------------------------------------------
@@ -115,59 +116,59 @@ model Citas {
 // ---------------------------------------------
 
 model EpisodiosAtencion {
-  id              Int      @id @default(autoincrement())
-  personaId       Int
-  fechaApertura   DateTime @db.Date
-  motivo          String
-  tipo            String
-  estado          String   @default("ABIERTO")
+  id            Int      @id @default(autoincrement())
+  personaId     Int
+  fechaApertura DateTime @db.Date
+  motivo        String
+  tipo          String
+  estado        String   @default("ABIERTO")
 
-  persona         PersonasAtendidas @relation(fields: [personaId], references: [id])
-  notas           NotasClinicas[]
-  diagnosticos    Diagnosticos[]
-  ordenes         Ordenes[]
-  prescripciones  Prescripciones[]
+  persona        PersonasAtendidas @relation(fields: [personaId], references: [id])
+  notas          NotasClinicas[]
+  diagnosticos   Diagnosticos[]
+  ordenes        Ordenes[]
+  prescripciones Prescripciones[]
 }
 
 model NotasClinicas {
-  id              Int      @id @default(autoincrement())
-  episodioId      Int
-  profesionalId   Int
-  fechaNota       DateTime @db.Date
-  subjetivo       String
-  objetivo        String
-  analisis        String
-  plan            String
-  adjuntos        Json?  @db.Json
-  version         Int      @default(1)
+  id            Int      @id @default(autoincrement())
+  episodioId    Int
+  profesionalId Int
+  fechaNota     DateTime @db.Date
+  subjetivo     String
+  objetivo      String
+  analisis      String
+  plan          String
+  adjuntos      Json?    @db.Json
+  version       Int      @default(1)
 
-  episodio        EpisodiosAtencion @relation(fields: [episodioId], references: [id])
-  profesional     Profesionales @relation(fields: [profesionalId], references: [id])
-  
+  episodio    EpisodiosAtencion @relation(fields: [episodioId], references: [id])
+  profesional Profesionales     @relation(fields: [profesionalId], references: [id])
+
   @@unique([episodioId, version])
 }
 
 model Diagnosticos {
-  id              Int      @id @default(autoincrement())
-  episodioId      Int
-  codigo          String
-  descripcion     String
-  tipo            String
-  principal       Boolean  @default(false)
+  id          Int     @id @default(autoincrement())
+  episodioId  Int
+  codigo      String
+  descripcion String
+  tipo        String
+  principal   Boolean @default(false)
 
-  episodio        EpisodiosAtencion @relation(fields: [episodioId], references: [id])
+  episodio EpisodiosAtencion @relation(fields: [episodioId], references: [id])
 }
 
 model Consentimientos {
-  id              Int      @id @default(autoincrement())
-  personaId       Int
+  id                Int      @id @default(autoincrement())
+  personaId         Int
   tipoProcedimiento String
-  fecha           DateTime @db.Date
-  contenido       String   @db.Text
-  metodo          String
-  archivoId       Int?
+  fecha             DateTime @db.Date
+  contenido         String   @db.Text
+  metodo            String
+  archivoId         Int?
 
-  persona         PersonasAtendidas @relation(fields: [personaId], references: [id])
+  persona PersonasAtendidas @relation(fields: [personaId], references: [id])
 }
 
 // ---------------------------------------------
@@ -175,72 +176,72 @@ model Consentimientos {
 // ---------------------------------------------
 
 model Ordenes {
-  id              Int      @id @default(autoincrement())
-  episodioId      Int
-  fechaCreacion   DateTime @db.Date
-  tipo            String   @map("tipo") // lab, imagen, procedimiento 
-  prioridad       String   @default("NORMAL")
-  estado          String   @default("EMITIDA") // emitida, autorizada, enCurso, completada, anulada 
-  
+  id            Int      @id @default(autoincrement())
+  episodioId    Int
+  fechaCreacion DateTime @db.Date
+  tipo          String   @map("tipo") // lab, imagen, procedimiento 
+  prioridad     String   @default("NORMAL")
+  estado        String   @default("EMITIDA") // emitida, autorizada, enCurso, completada, anulada 
+
   // Relaciones
-  episodio        EpisodiosAtencion @relation(fields: [episodioId], references: [id])
-  items           OrdenItems[]       // Detalle de los ítems o exámenes solicitados
-  resultados      Resultados[]       // El resultado asociado a esta orden
-  autorizaciones Autorizaciones[]  // Autorizaciones asociadas a esta orden
+  episodio       EpisodiosAtencion @relation(fields: [episodioId], references: [id])
+  items          OrdenItems[] // Detalle de los ítems o exámenes solicitados
+  resultados     Resultados[] // El resultado asociado a esta orden
+  autorizaciones Autorizaciones[] // Autorizaciones asociadas a esta orden
 }
 
 model OrdenItems {
-  id              Int      @id @default(autoincrement())
-  ordenId         Int      @map("orden_id")
-  codigo          String   @map("codigo") // Código del examen/procedimiento
-  descripcion     String   @db.Text
-  indicaciones    String?  @db.Text // Indicaciones específicas del ítem
-  
+  id           Int     @id @default(autoincrement())
+  ordenId      Int     @map("orden_id")
+  codigo       String  @map("codigo") // Código del examen/procedimiento
+  descripcion  String  @db.Text
+  indicaciones String? @db.Text // Indicaciones específicas del ítem
+
   // Relación
-  orden           Ordenes @relation(fields: [ordenId], references: [id])
-  
+  orden Ordenes @relation(fields: [ordenId], references: [id])
+
   @@map("orden_items")
 }
 
 model Prescripciones {
-  id              Int      @id @default(autoincrement())
-  episodioId      Int      @map("episodio_id")
+  id                Int      @id @default(autoincrement())
+  episodioId        Int      @map("episodio_id")
   fechaPrescripcion DateTime @default(now()) @map("fecha_prescripcion")
-  observaciones   String?  @db.Text
-  estado          String   @default("ACTIVA")
+  observaciones     String?  @db.Text
+  estado            String   @default("ACTIVA")
 
   // Relaciones
-  episodio        EpisodiosAtencion @relation(fields: [episodioId], references: [id])
-  items           PrescripcionItems[] // Detalle de los medicamentos/insumos
+  episodio EpisodiosAtencion   @relation(fields: [episodioId], references: [id])
+  items    PrescripcionItems[] // Detalle de los medicamentos/insumos
 }
 
 model PrescripcionItems {
-  id              Int      @id @default(autoincrement())
-  prescripcionId  Int
+  id                Int    @id @default(autoincrement())
+  prescripcionId    Int
   medicamentoCodigo String // Código del medicamento 
-  nombre          String
-  dosis           String
-  via             String
-  frecuencia      String
-  duracionDias    Int
-  
+  nombre            String
+  dosis             String
+  via               String
+  frecuencia        String
+  duracionDias      Int
+
   // Relación
-  prescripcion    Prescripciones @relation(fields: [prescripcionId], references: [id])
-  
+  prescripcion Prescripciones @relation(fields: [prescripcionId], references: [id])
+
   @@map("prescripcion_items")
 }
 
 model Resultados {
-  id              Int      @id @default(autoincrement())
-  ordenId         Int
-  fecha           DateTime
-  resumen         String
-  archivoId       String?
-  version         Int      @default(1)
-  
+  id        Int      @id @default(autoincrement())
+  ordenId   Int
+  fecha     DateTime
+  resumen   String
+  archivoId String?
+  version   Int      @default(1)
+
   // Relación
-  orden           Ordenes @relation(fields: [ordenId], references: [id])
-  
+  orden Ordenes @relation(fields: [ordenId], references: [id])
+
   @@unique([ordenId, version])
 }
 
@@ -249,60 +250,163 @@ model Resultados {
 // ---------------------------------------------
 
 model Aseguradoras {
-  id        Int     @id @default(autoincrement())
-  nombre    String
-  nit       String  @unique
-  contacto  String
-  estado    String  @default("ACTIVA")
+  id       Int    @id @default(autoincrement())
+  nombre   String
+  nit      String @unique
+  contacto String
+  estado   String @default("ACTIVA")
 
-  planes    PlanesCobertura[]
+  planes   PlanesCobertura[]
+  facturas Facturas[]
 
   @@map("aseguradoras")
 }
 
 model PlanesCobertura {
-  id                 Int     @id @default(autoincrement())
-  aseguradoraId      Int     @map("aseguradora_id")
-  nombre             String
-  condicionesGenerales String @db.Text @map("condiciones_generales")
-  estado             String  @default("ACTIVO")
+  id                   Int    @id @default(autoincrement())
+  aseguradoraId        Int    @map("aseguradora_id")
+  nombre               String
+  condicionesGenerales String @map("condiciones_generales") @db.Text
+  estado               String @default("ACTIVO")
 
-  aseguradora        Aseguradoras @relation(fields: [aseguradoraId], references: [id])
-  afiliaciones       Afiliaciones[]
-  autorizaciones     Autorizaciones[]
+  aseguradora    Aseguradoras     @relation(fields: [aseguradoraId], references: [id])
+  afiliaciones   Afiliaciones[]
+  autorizaciones Autorizaciones[]
+  aranceles      Arancel[]
 
   @@map("planes_cobertura")
 }
 
 model Afiliaciones {
-  id               Int      @id @default(autoincrement())
-  personaId        Int      @map("persona_id")
-  planId           Int      @map("plan_id")
-  numeroPoliza     String   @map("numero_poliza")
-  vigenteDesde     DateTime @db.Date @map("vigente_desde")
-  vigenteHasta     DateTime @db.Date @map("vigente_hasta")
-  copago           Float    @default(0)
-  cuotaModeradora  Float    @default(0)
+  id              Int      @id @default(autoincrement())
+  personaId       Int      @map("persona_id")
+  planId          Int      @map("plan_id")
+  numeroPoliza    String   @map("numero_poliza")
+  vigenteDesde    DateTime @map("vigente_desde") @db.Date
+  vigenteHasta    DateTime @map("vigente_hasta") @db.Date
+  copago          Float    @default(0)
+  cuotaModeradora Float    @default(0)
 
-  persona          PersonasAtendidas @relation(fields: [personaId], references: [id])
-  plan             PlanesCobertura   @relation(fields: [planId], references: [id])
+  persona PersonasAtendidas @relation(fields: [personaId], references: [id])
+  plan    PlanesCobertura   @relation(fields: [planId], references: [id])
 
   @@map("afiliaciones")
 }
 
 model Autorizaciones {
-  id                  Int      @id @default(autoincrement())
-  ordenId             Int?     @map("orden_id")
-  procedimientoCodigo String?  @map("procedimiento_codigo")
-  planId              Int      @map("plan_id")
-  estado              String   @default("SOLICITADA")
-  fechaSolicitud      DateTime @default(now()) @map("fecha_solicitud")
+  id                  Int       @id @default(autoincrement())
+  ordenId             Int?      @map("orden_id")
+  procedimientoCodigo String?   @map("procedimiento_codigo")
+  planId              Int       @map("plan_id")
+  estado              String    @default("SOLICITADA")
+  fechaSolicitud      DateTime  @default(now()) @map("fecha_solicitud")
   fechaRespuesta      DateTime? @map("fecha_respuesta")
-  numeroAutorizacion  String?  @map("numero_autorizacion")
-  observaciones       String?  @db.Text
+  numeroAutorizacion  String?   @map("numero_autorizacion")
+  observaciones       String?   @db.Text
 
-  orden               Ordenes?        @relation(fields: [ordenId], references: [id])
-  plan                PlanesCobertura @relation(fields: [planId], references: [id])
+  orden Ordenes?        @relation(fields: [ordenId], references: [id])
+  plan  PlanesCobertura @relation(fields: [planId], references: [id])
 
   @@map("autorizaciones")
+}
+
+// ---------------------------------------------
+// 2.6 Catalogo clinico y arancel
+// ---------------------------------------------
+
+model Prestaciones {
+  codigo         String  @id
+  nombre         String
+  grupo          String
+  requisitos     String? @db.Text
+  tiempoEstimado Int     @map("tiempo_estimado") // en minutos
+
+  // Relaciones
+  aranceles    Arancel[]
+  facturaItems FacturaItems[]
+
+  @@map("prestaciones")
+}
+
+model Arancel {
+  id               Int      @id @default(autoincrement())
+  prestacionCodigo String   @map("prestacion_codigo")
+  planId           Int?     @map("plan_id")
+  valorBase        Decimal  @map("valor_base") @db.Decimal(10, 2)
+  impuestos        Decimal  @db.Decimal(10, 2)
+  vigenteDesde     DateTime @map("vigente_desde") @db.Date
+  vigenteHasta     DateTime @map("vigente_hasta") @db.Date
+
+  // Relaciones
+  prestacion Prestaciones     @relation(fields: [prestacionCodigo], references: [codigo])
+  plan       PlanesCobertura? @relation(fields: [planId], references: [id])
+
+  @@map("arancel")
+}
+
+// ---------------------------------------------
+// 2.7 Facturacion y cobros
+// ---------------------------------------------
+
+model Facturas {
+  id            Int      @id @default(autoincrement())
+  numero        String   @unique
+  fechaEmision  DateTime @map("fecha_emision")
+  personaId     Int?     @map("persona_id")
+  aseguradoraId Int?     @map("aseguradora_id")
+  moneda        String
+  subtotal      Decimal  @db.Decimal(10, 2)
+  total         Decimal  @db.Decimal(10, 2)
+  estado        String   @default("PENDIENTE") // emitida, pagada, pendiente, anulada
+
+  items FacturaItems[]
+  pagos Pagos[]
+
+  persona       PersonasAtendidas? @relation(fields: [personaId], references: [id])
+  aseguradora   Aseguradoras?      @relation(fields: [aseguradoraId], references: [id])
+  notasFacturas NotasFactura[]
+
+  @@map("facturas")
+}
+
+model FacturaItems {
+  id               Int     @id @default(autoincrement())
+  facturaId        Int     @map("factura_id")
+  prestacionCodigo String  @map("prestacion_codigo")
+  descripcion      String  @db.Text
+  cantidad         Int
+  valorUnitario    Decimal @map("valor_unitario") @db.Decimal(10, 2)
+  impuestos        Decimal @db.Decimal(10, 2)
+  total            Decimal @db.Decimal(10, 2)
+
+  factura    Facturas     @relation(fields: [facturaId], references: [id])
+  prestacion Prestaciones @relation(fields: [prestacionCodigo], references: [codigo])
+
+  @@map("factura_items")
+}
+
+model Pagos {
+  id         Int      @id @default(autoincrement())
+  facturaId  Int      @map("factura_id")
+  fecha      DateTime @default(now())
+  monto      Decimal  @db.Decimal(10, 2)
+  medio      String
+  referencia String?
+  estado     String   @default("COMPLETADO")
+
+  factura Facturas @relation(fields: [facturaId], references: [id])
+
+  @@map("pagos")
+}
+
+model NotasFactura {
+  id        Int     @id @default(autoincrement())
+  facturaId Int     @map("factura_id")
+  monto     Decimal @db.Decimal(10, 2)
+  motivo    String  @db.Text
+  tipo      String // CREDITO o DEBITO
+
+  factura Facturas @relation(fields: [facturaId], references: [id])
+
+  @@map("notas_factura")
 }
