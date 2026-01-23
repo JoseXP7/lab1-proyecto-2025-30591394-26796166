@@ -1,7 +1,7 @@
-import facturasRepo from '../repositories/FacturasRepository.js'
-import prestacionesRepo from '../repositories/PrestacionesRepository.js'
-import arancelRepo from '../repositories/ArancelRepository.js'
-import prisma from '../config/prisma.js'
+import facturasRepo from "../repositories/FacturasRepository.js"
+import prestacionesRepo from "../repositories/PrestacionesRepository.js"
+import arancelRepo from "../repositories/ArancelRepository.js"
+import prisma from "../config/prisma.js"
 
 class FacturasService {
   async createFactura(data) {
@@ -17,10 +17,11 @@ class FacturasService {
       const arancel = await arancelRepo.findActiveByPrestacionAndPlan(
         item.prestacionCodigo,
         data.aseguradoraId || data.planId,
+        fecha,
       )
       if (!arancel)
         throw new Error(
-          `No existe precio vigente para prestacion ${item.prestacionCodigo} en la fecha ${fecha.toISOString().split('T')[0]}`,
+          `No existe precio vigente para prestacion ${item.prestacionCodigo} en la fecha ${fecha.toISOString().split("T")[0]}`,
         )
     }
 
@@ -44,12 +45,12 @@ class FacturasService {
 
   async createPago(facturaId, pagoData) {
     const factura = await facturasRepo.findById(facturaId)
-    if (!factura) throw new Error('Factura no encontrada')
+    if (!factura) throw new Error("Factura no encontrada")
     // compute pendiente
     const paid = await facturasRepo.sumPagos(facturaId)
     const pendiente = Number(factura.total) - Number(paid || 0)
     if (pagoData.monto > pendiente)
-      throw new Error('El pago excede el saldo pendiente')
+      throw new Error("El pago excede el saldo pendiente")
 
     const created = await facturasRepo.addPago(facturaId, pagoData)
     // if pago completa total, update factura estado to PAGADA (simple approach)
@@ -58,7 +59,7 @@ class FacturasService {
       // update factura estado
       await prisma.facturas.update({
         where: { id: Number(facturaId) },
-        data: { estado: 'PAGADA' },
+        data: { estado: "PAGADA" },
       })
     }
     return created
